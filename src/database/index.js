@@ -24,10 +24,7 @@ class Database {
   }
 
   mongo() {
-    // const MONGO_URL = 'mongodb://192.168.99.100:27017/gobarber';
-    const MONGO_URL = 'mongodb://localhost:27017/gobarber';
-
-    this.mongoConnection = mongoose.connect(MONGO_URL, {
+    this.mongoConnection = mongoose.connect(process.env.MONGO_URL, {
       useUnifiedTopology: true,
       useNewUrlParser: true,
       useFindAndModify: true,
