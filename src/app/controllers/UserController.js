@@ -31,8 +31,7 @@ class UserController {
     const schema = Yup.object().shape({
       name: Yup.string(),
       email: Yup.string().email(),
-      oldPassword: Yup.string()
-        .min(6),
+      oldPassword: Yup.string().min(6),
       password: Yup.string()
         .min(6)
         .when('oldPassword', (oldPassword, field) =>
@@ -65,7 +64,7 @@ class UserController {
     }
 
     const { id, name, provider, avatar_id } = await user.update(req.body);
-    return res.json({ id, name, email, provider, avatar_id});
+    return res.json({ id, name, email, provider, avatar_id });
   }
 }
 

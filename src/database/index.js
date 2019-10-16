@@ -27,14 +27,11 @@ class Database {
     // const MONGO_URL = 'mongodb://192.168.99.100:27017/gobarber';
     const MONGO_URL = 'mongodb://localhost:27017/gobarber';
 
-    this.mongoConnection = mongoose.connect(
-      MONGO_URL,
-      {
-        useUnifiedTopology: true,
-        useNewUrlParser: true,
-        useFindAndModify: true,
-      }
-    );
+    this.mongoConnection = mongoose.connect(MONGO_URL, {
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+      useFindAndModify: true,
+    });
   }
 }
 

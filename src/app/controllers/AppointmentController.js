@@ -17,13 +17,10 @@ class AppointmentController {
     const appointsments = await Appointment.findAll({
       where: {
         user_id: req.userId,
-        date: {
-          [Op.gte]: new Date(),
-        },
         canceled_at: null,
       },
       order: ['date'],
-      attributes: ['id', 'date'],
+      attributes: ['id', 'date', 'past', 'cancelable'],
       limit: 20,
       offset: (page - 1) * 20,
       include: [
@@ -57,7 +54,9 @@ class AppointmentController {
     const { provider_id, date } = req.body;
 
     if (provider_id === req.userId) {
-      return res.status(400).json({ message: 'You cannot create appointment for yourself.' });
+      return res
+        .status(400)
+        .json({ message: 'You cannot create appointment for yourself.' });
     }
 
     const checkIsProvider = await User.findOne({
@@ -115,23 +114,27 @@ class AppointmentController {
         {
           model: User,
           as: 'provider',
-          attributes: ['name', 'email']
+          attributes: ['name', 'email'],
         },
         {
           model: User,
           as: 'user',
-          attributes: ['name', 'email']
-        }
-      ]
+          attributes: ['name', 'email'],
+        },
+      ],
     });
 
-    if(appointment.user_id !== req.userId) {
-      return res.status(401).json({ message: "You don't have permission to cancel this appointment."})
+    if (appointment.user_id !== req.userId) {
+      return res.status(401).json({
+        message: "You don't have permission to cancel this appointment.",
+      });
     }
 
     const dateWithSub = subHours(appointment.date, 2);
     if (isBefore(dateWithSub, new Date())) {
-      return res.status(401).json({ message: "You can only cancel appointments 2 hours in advance."})
+      return res.status(401).json({
+        message: 'You can only cancel appointments 2 hours in advance.',
+      });
     }
 
     appointment.canceled_at = new Date();
@@ -139,7 +142,7 @@ class AppointmentController {
 
     await Queue.add(CancelationMail.key, {
       appointment,
-    })
+    });
 
     return res.json(appointment);
   }
