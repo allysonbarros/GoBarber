@@ -32,7 +32,6 @@ class UserController {
       name: Yup.string(),
       email: Yup.string().email(),
       oldPassword: Yup.string()
-        .required()
         .min(6),
       password: Yup.string()
         .min(6)
@@ -65,8 +64,8 @@ class UserController {
       return res.status(401).json({ error: 'Password does not match.' });
     }
 
-    const { id, name, provider } = await user.update(req.body);
-    return res.json({ id, name, email, provider });
+    const { id, name, provider, avatar_id } = await user.update(req.body);
+    return res.json({ id, name, email, provider, avatar_id});
   }
 }
 
